@@ -1,23 +1,32 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/lib/pq"
+)
 
 type Task struct {
-	ID     int       `db:"id"`
-	UUID   uuid.UUID `db:"uuid"`
-	Name   string    `db:"name"`
-	Status int       `db:"status"`
+	// TODO:
+	PK        int         `db:"pk"`
+	ID        uuid.UUID   `db:"id"`
+	Name      string      `db:"name"`
+	Status    int         `db:"status"`
+	CreatedAt time.Time   `db:"created_at"`
+	UpdatedAt time.Time   `db:"updated_at"`
+	DeletedAt pq.NullTime `db:"deleted_at"`
 }
 
 type DisplayTask struct {
-	UUID   uuid.UUID `json:"uuid"`
+	ID     uuid.UUID `json:"id"`
 	Name   string    `json:"name"`
 	Status int       `json:"status"`
 }
 
 func (t *Task) Parse() *DisplayTask {
 	return &DisplayTask{
-		UUID:   t.UUID,
+		ID:     t.ID,
 		Name:   t.Name,
 		Status: t.Status,
 	}
