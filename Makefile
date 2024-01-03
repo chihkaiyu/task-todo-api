@@ -6,6 +6,10 @@ build-api: gen-swagger
 build-swaggo:
 	docker build -t swaggo:1.20.12 -f $(shell pwd)/infra/docker/swaggo/Dockerfile .
 
+.PHONY: build-migrate
+build-migrate:
+	docker build -t sql-migrate:latest $(shell pwd)/infra/docker/migration
+
 .PHONY: gen-swagger
 gen-swagger:
 	docker run --rm \
