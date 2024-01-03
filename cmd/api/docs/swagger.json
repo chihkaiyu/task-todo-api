@@ -1,0 +1,15 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Task Todo API server",
+        "title": "Task Todo API",
+        "contact": {
+            "name": "Chih Kai Yu",
+            "email": "kai.chihkaiyu@gmail.com"
+        },
+        "version": "0.0.1"
+    },
+    "host": "localhost:8080",
+    "basePath": "/api",
+    "paths": {}
+}
