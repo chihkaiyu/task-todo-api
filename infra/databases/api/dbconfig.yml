@@ -1,0 +1,4 @@
+development:
+  dialect: postgres
+  datasource: postgres://postgres@postgres:5432/gogolook?sslmode=disable
+  table: migrations
