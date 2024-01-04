@@ -1,4 +1,4 @@
-bin
+bin/
 .vscode
 .DS_Store
 tmp

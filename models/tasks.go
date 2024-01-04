@@ -41,6 +41,10 @@ type ListTaskResp struct {
 	Result []*DisplayTask `json:"result"`
 }
 
+type CreateTaskParams struct {
+	Name string `json:"name"`
+}
+
 type CreateTaskResp struct {
 	Result *DisplayTask `json:"result"`
 }

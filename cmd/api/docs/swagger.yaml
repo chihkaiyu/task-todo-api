@@ -1,4 +1,48 @@
 basePath: /api
+definitions:
+  models.BaseError:
+    properties:
+      code:
+        type: string
+    type: object
+  models.CreateTaskParams:
+    properties:
+      name:
+        type: string
+    type: object
+  models.CreateTaskResp:
+    properties:
+      result:
+        $ref: '#/definitions/models.DisplayTask'
+    type: object
+  models.DisplayTask:
+    properties:
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: integer
+    type: object
+  models.ListTaskResp:
+    properties:
+      result:
+        items:
+          $ref: '#/definitions/models.DisplayTask'
+        type: array
+    type: object
+  models.PutTaskParams:
+    properties:
+      name:
+        type: string
+      status:
+        type: integer
+    type: object
+  models.PutTaskResp:
+    properties:
+      result:
+        $ref: '#/definitions/models.DisplayTask'
+    type: object
 host: localhost:8080
 info:
   contact:
@@ -7,5 +51,117 @@ info:
   description: Task Todo API server
   title: Task Todo API
   version: 0.0.1
-paths: {}
+paths:
+  /task:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: parameters for creating task
+        in: body
+        name: CreateTaskParams
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateTaskParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.CreateTaskResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseError'
+      summary: Create task
+      tags:
+      - task
+  /task/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: task's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseError'
+      summary: Delete task
+      tags:
+      - task
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: task's ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: parameters for updating task
+        in: body
+        name: PutTaskParams
+        required: true
+        schema:
+          $ref: '#/definitions/models.PutTaskParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PutTaskResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseError'
+      summary: Put task
+      tags:
+      - task
+  /tasks:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ListTaskResp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/models.BaseError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/models.BaseError'
+      summary: List tasks
+      tags:
+      - task
 swagger: "2.0"
