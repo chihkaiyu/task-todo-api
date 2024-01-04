@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS tasks (
     deleted_at TIMESTAMP DEFAULT NULL
 );
 
-CREATE UNIQUE INDEX tasks_uuid_idx ON tasks (uuid);
+CREATE UNIQUE INDEX tasks_id_idx ON tasks (id);
 
 -- +migrate Down
 DROP TABLE IF EXISTS tasks;

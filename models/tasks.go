@@ -32,7 +32,7 @@ func (t *Task) Parse() *DisplayTask {
 	}
 }
 
-type UpdateTaskParams struct {
+type PutTaskParams struct {
 	Name   string `json:"name"`
 	Status int    `json:"status"`
 }

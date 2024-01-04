@@ -44,15 +44,15 @@ func (im *impl) Create(ctx context.Context, name string) (*models.Task, error) {
 	return task, nil
 }
 
-func (im *impl) Get(ctx context.Context, uuidStr string) (*models.Task, error) {
-	uid, err := uuid.Parse(uuidStr)
+func (im *impl) Get(ctx context.Context, id string) (*models.Task, error) {
+	parsedID, err := uuid.Parse(id)
 	if err != nil {
-		return nil, err
+		return nil, ErrInvalidID
 	}
 
-	s := "SELECT id, name, status FROM tasks WHERE id=$1"
+	s := "SELECT id, name, status, created_at, updated_at, deleted_at FROM tasks WHERE id=$1"
 	task := &models.Task{}
-	if err := im.db.Get(task, s, uid); err != nil {
+	if err := im.db.Get(task, s, parsedID); err != nil {
 		return nil, err
 	}
 
@@ -64,7 +64,7 @@ func (im *impl) List(ctx context.Context, opts ...ListTaskOptionFunc) ([]*models
 	for _, f := range opts {
 		f(&opt)
 	}
-	s := "SELECT id, name, status FROM tasks\n"
+	s := "SELECT id, name, status, created_at, updated_at, deleted_at FROM tasks\n"
 	if !opt.WithDeleted {
 		s += "WHERE deleted_at IS NULL"
 	}
@@ -76,16 +76,16 @@ func (im *impl) List(ctx context.Context, opts ...ListTaskOptionFunc) ([]*models
 	return tasks, nil
 }
 
-func (im *impl) Put(ctx context.Context, uuidStr string, params *models.UpdateTaskParams) (*models.Task, error) {
-	uid, err := uuid.Parse(uuidStr)
+func (im *impl) Put(ctx context.Context, id string, params *models.PutTaskParams) (*models.Task, error) {
+	parsedID, err := uuid.Parse(id)
 	if err != nil {
-		return nil, err
+		return nil, ErrInvalidID
 	}
 
-	s := "UPDATE tasks SET name=:name, status=:status, updated_at=:updated_at WHERE id=:id RETURNING name, status"
+	s := "UPDATE tasks SET name=:name, status=:status, updated_at=:updated_at WHERE id=:id RETURNING id, name, status, created_at, updated_at, deleted_at"
 	now := timeNow().UTC()
 	task := &models.Task{
-		ID:        uid,
+		ID:        parsedID,
 		Name:      params.Name,
 		Status:    params.Status,
 		UpdatedAt: now,
@@ -108,15 +108,15 @@ func (im *impl) Put(ctx context.Context, uuidStr string, params *models.UpdateTa
 	return updated, nil
 }
 
-func (im *impl) Delete(ctx context.Context, uuidStr string) error {
-	uid, err := uuid.Parse(uuidStr)
+func (im *impl) Delete(ctx context.Context, id string) error {
+	parsedID, err := uuid.Parse(id)
 	if err != nil {
-		return err
+		return ErrInvalidID
 	}
 
 	now := timeNow().UTC()
 	s := "UPDATE tasks SET deleted_at=$1 WHERE id=$2"
-	_, err = im.db.Exec(s, now, uid)
+	_, err = im.db.Exec(s, now, parsedID)
 	if err != nil {
 		return err
 	}

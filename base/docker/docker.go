@@ -1,13 +1,11 @@
 package docker
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/ethereum/go-ethereum/ethclient"
 	"github.com/ory/dockertest/v3"
 	"github.com/rs/zerolog/log"
 
@@ -31,7 +29,7 @@ var (
 	runningContainers = []*dockertest.Resource{}
 	RepoTags          = map[string]*repoInfo{
 		"postgres": {
-			"postgres", "14.1-alpine", "REDREAMER_LOCAL_POSTGRES", 5432,
+			"postgres", "14.1-alpine", "LOCAL_POSTGRES", 5432,
 			[]string{},
 			[]string{"POSTGRES_HOST_AUTH_METHOD=trust"},
 			checkPostgres, ClearPostgres,
@@ -132,14 +130,6 @@ func RemoveExternal() error {
 	}
 
 	if reuseDocker {
-		// remove ganache even reuse docker, we can't reuse ganache since it's not easy to clear data
-		c, found := pool.ContainerByName(RepoTags["ganache"].containerName)
-		if found {
-			if err := pool.Purge(c); err != nil {
-				log.Error().Err(err).Str("repo", c.Container.ID).Msg("pool.Purge failed")
-			}
-		}
-
 		return nil
 	}
 
@@ -183,24 +173,5 @@ func ClearPostgres(port string) error {
 		}
 	}
 
-	return nil
-}
-
-func checkGanache(port string) error {
-	client, err := ethclient.Dial(fmt.Sprintf("http://localhost:%s", port))
-	if err != nil {
-		return err
-	}
-
-	_, err = client.ChainID(context.Background())
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func ClearGanache(port string) error {
-	// you can only restart whole network to clear
 	return nil
 }
