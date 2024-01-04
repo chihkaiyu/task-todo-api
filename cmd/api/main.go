@@ -25,8 +25,11 @@ import (
 
 	bconfig "github.com/chihkaiyu/task-todo-api/base/config"
 	"github.com/chihkaiyu/task-todo-api/base/server"
+	"github.com/chihkaiyu/task-todo-api/cmd/api/api"
 	"github.com/chihkaiyu/task-todo-api/cmd/api/config"
 	"github.com/chihkaiyu/task-todo-api/middlewares"
+	"github.com/chihkaiyu/task-todo-api/services/postgres"
+	"github.com/chihkaiyu/task-todo-api/stores/tasks"
 
 	_ "github.com/chihkaiyu/task-todo-api/cmd/api/docs"
 )
@@ -48,6 +51,14 @@ func main() {
 		rootLogger.Fatal().Err(err).Msg("bconfig.Parse failed")
 	}
 
+	dbPG, err := postgres.New(cfg.PostgresURI)
+	if err != nil {
+		rootLogger.Fatal().Msg("postgres.New failed")
+	}
+
+	// stores
+	taskStore := tasks.New(dbPG)
+
 	router := gin.New()
 	router.Use(
 		// TODO: add panic counter handler
@@ -61,10 +72,13 @@ func main() {
 			"message": "healthy",
 		})
 	})
-
 	if cfg.Debug {
 		router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	}
+	rg := router.Group("/")
+
+	// routers
+	api.NewTaskHandler(rg, taskStore)
 
 	if err := server.Serve(fmt.Sprintf(":%s", cfg.Port), router); err != nil {
 		rootLogger.Fatal().Err(err).Msg("server.Serve failed:")

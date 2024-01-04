@@ -17,5 +17,6 @@ services:
       - ENV=local
       - PORT=8080
       - DEBUG=true
+      - POSTGRES_URI=postgres://postgres@postgres:5432/gogolook?sslmode=disable
     depends_on:
       - postgres
