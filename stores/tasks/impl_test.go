@@ -59,10 +59,10 @@ func (s *taskSuite) TearDownSuite() {
 }
 
 func (s *taskSuite) SetupTest() {
-	createDB("redreamer", s.postgresPort)
-	create("redreamer", s.postgresPort)
+	createDB("gogolook", s.postgresPort)
+	create("gogolook", s.postgresPort)
 
-	db, err := postgres.New(fmt.Sprintf("postgres://postgres@localhost:%s/redreamer?sslmode=disable", s.postgresPort))
+	db, err := postgres.New(fmt.Sprintf("postgres://postgres@localhost:%s/gogolook?sslmode=disable", s.postgresPort))
 	s.Require().NoError(err)
 	s.db = db
 	s.mockFuncs = new(mockFuncs)

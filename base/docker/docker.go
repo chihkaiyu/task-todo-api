@@ -166,7 +166,7 @@ func ClearPostgres(port string) error {
 	}
 	defer db.Close()
 
-	rows := []string{"redreamer"}
+	rows := []string{"gogolook"}
 	for _, row := range rows {
 		if _, err := db.Exec("DROP DATABASE IF EXISTS " + row + " WITH (FORCE)"); err != nil {
 			log.Error().Err(err).Msg("drop database failed")
