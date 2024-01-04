@@ -22,3 +22,6 @@ gen-swagger:
 migrate:
 	docker run --rm --network task-todo-api_default -v $(shell pwd)/infra/databases:/app/databases sql-migrate:latest up api
 
+.PHONY: test
+test:
+	go test -count=1 -timeout 900s -race -p 1 ./...
