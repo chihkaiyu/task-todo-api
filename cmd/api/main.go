@@ -61,11 +61,11 @@ func main() {
 
 	router := gin.New()
 	router.Use(
-		// TODO: add panic counter handler
-		// TODO: add api response time metric
+		gin.CustomRecovery(middlewares.RecoveryHandle),
 		middlewares.Cors(cfg.Env),
 		requestid.New(),
 		middlewares.Logger(rootCtx),
+		middlewares.Stat(),
 	)
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{

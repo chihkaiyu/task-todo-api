@@ -6,7 +6,10 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/chihkaiyu/task-todo-api/models"
+	"github.com/chihkaiyu/task-todo-api/services/metrics"
 )
+
+var met = metrics.New("api")
 
 func JSON(c *gin.Context, code int, obj interface{}) {
 	c.JSON(code, obj)
@@ -42,4 +45,8 @@ func Error(c *gin.Context, err interface{}) {
 	}
 
 	c.JSON(code, err)
+}
+
+func RecoveryHandle(c *gin.Context, err interface{}) {
+	met.Counter("panic", 1, []metrics.Tag{})
 }

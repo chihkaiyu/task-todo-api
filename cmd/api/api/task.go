@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog"
 
 	mw "github.com/chihkaiyu/task-todo-api/middlewares"
 	"github.com/chihkaiyu/task-todo-api/models"
@@ -38,6 +39,7 @@ func (th *taskHandler) listTask(c *gin.Context) {
 
 	tasks, err := th.taskStore.List(ctx)
 	if err != nil {
+		zerolog.Ctx(ctx).Error().Err(err).Msg("taskStore.List failed")
 		mw.Error(c, err)
 		return
 	}
@@ -66,12 +68,14 @@ func (th *taskHandler) createTask(c *gin.Context) {
 
 	params := models.CreateTaskParams{}
 	if err := c.ShouldBindJSON(&params); err != nil {
+		zerolog.Ctx(ctx).Error().Err(err).Msg("c.ShouldBindJSON failed")
 		mw.Error(c, err)
 		return
 	}
 
 	task, err := th.taskStore.Create(ctx, params.Name)
 	if err != nil {
+		zerolog.Ctx(ctx).Error().Err(err).Msg("taskStore.Create failed")
 		mw.Error(c, err)
 		return
 	}
@@ -97,12 +101,14 @@ func (th *taskHandler) putTask(c *gin.Context) {
 
 	params := models.PutTaskParams{}
 	if err := c.ShouldBindJSON(&params); err != nil {
+		zerolog.Ctx(ctx).Error().Err(err).Msg("c.ShouldBindJSON failed")
 		mw.Error(c, err)
 		return
 	}
 
 	task, err := th.taskStore.Put(ctx, id, &params)
 	if err != nil {
+		zerolog.Ctx(ctx).Error().Err(err).Msg("taskStore.Put failed")
 		mw.Error(c, err)
 		return
 	}
@@ -126,6 +132,7 @@ func (th *taskHandler) deleteTask(c *gin.Context) {
 	id := c.Param("id")
 
 	if err := th.taskStore.Delete(ctx, id); err != nil {
+		zerolog.Ctx(ctx).Error().Err(err).Msg("taskStore.Delete failed")
 		mw.Error(c, err)
 		return
 	}
