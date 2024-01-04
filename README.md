@@ -3,8 +3,8 @@
 # Prerequisite
 - Docker, docker-compose (must)
 - Golang (must)
-- (sql-migrate)[https://github.com/rubenv/sql-migrate] (optinal)
-- (swaggo)[https://github.com/swaggo/swag] (optional)
+- sql-migrate (optinal) https://github.com/rubenv/sql-migrate
+- swaggo (optional) [https://github.com/swaggo/swag]
 
 # Features
 - API Document automatically created from code  
@@ -38,8 +38,9 @@ make migrate
 ```
 
 # Test
-Run (`export REUSE_DOCKER=1` so that you can reuse the docker container without shutdown it every time you run test)
+Run
 ```shell
 make test
 ```
+(`export REUSE_DOCKER=1` so that you can reuse the docker container without shutdown it every time you run test) 
 
