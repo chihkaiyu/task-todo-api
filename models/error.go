@@ -5,6 +5,8 @@ type BaseError struct {
 	Code string `json:"code"`
 }
 
+var InternalError = BaseError{Code: "INTERNAL_ERROR"}
+
 type (
 	BadRequestErr     BaseError
 	ForbiddenErr      BaseError
