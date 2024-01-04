@@ -4,7 +4,7 @@
 - Docker, docker-compose (must)
 - Golang (must)
 - sql-migrate (optinal) https://github.com/rubenv/sql-migrate
-- swaggo (optional) [https://github.com/swaggo/swag]
+- swaggo (optional) https://github.com/swaggo/swag
 
 # Features
 - API Document automatically created from code  
