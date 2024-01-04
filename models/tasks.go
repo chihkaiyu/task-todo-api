@@ -36,3 +36,15 @@ type PutTaskParams struct {
 	Name   string `json:"name"`
 	Status int    `json:"status"`
 }
+
+type ListTaskResp struct {
+	Result []*DisplayTask `json:"result"`
+}
+
+type CreateTaskResp struct {
+	Result *DisplayTask `json:"result"`
+}
+
+type PutTaskResp struct {
+	Result *DisplayTask `json:"result"`
+}
